@@ -107,3 +107,18 @@
   ;; :custom
   ;; (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
   
+
+;; Ace-Window
+(use-package ace-window
+  :bind ("M-o" . 'ace-window)
+  :init
+  (setq aw-dispatch-always t)
+  (setq aw-minibuffer-flag t)
+  (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
+
+
+;; YASnippet
+(use-package yasnippet
+  :config
+  (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
+  (yas-global-mode 1))

@@ -14,7 +14,9 @@
 (set-fringe-mode 10) ; Sets size of edge fringe
 (column-number-mode t)
 (load-theme 'gruvbox-dark-hard t)
+(setq word-wrap t)
 
+;; Line Numbers
 ;; Possible issues for 1000+ lines mitigated by grow-only
 (setq-default display-line-numbers-width 3) 
 (setq-default display-line-numbers-grow-only t) 
@@ -23,6 +25,9 @@
 ;; Keybindings
 (define-key key-translation-map (kbd "ESC") (kbd "C-g")) 
 
+;; Parentheses
+(electric-pair-mode 1)
+(setq electric-pair-pairs '((?\" . ?\") (?\{ . ?\}) (?\( . ?\))))
 
 
 (load "~/.emacs.d/packages.el")
@@ -34,7 +39,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(evil-magit magit projectile evil-collection evil gruvbox-theme helpful which-key doom-modeline marginalia vertico)))
+   '(yasnippet ace-window evil-magit magit projectile evil-collection evil gruvbox-theme helpful which-key doom-modeline marginalia vertico)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
