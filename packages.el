@@ -151,64 +151,58 @@
 
 
 ;; LSP-Mode
-;; Note that I copied (most of) this base config from emacs-kick
-;; It's extremely possible not all these settings are suitable -- they seem opinionated
-;; It seems to me that I need to install a server on arch and then add the hook in the appropriate place
-;; I may also be possible to get servers from M-x install-server (?)
-(use-package lsp-mode
-  :ensure t
-  :defer t
-  :hook (;; Replace XXX-mode with concrete major mode (e.g. python-mode)
-	 ;; Note I don't have access to C-c l. Use this for debugging.
-	 ;; ALso note glitchiness of options box and line numbers
-	 (python-mode . lsp-deferred)
-	 (c-mode . lsp-deferred)
-         (lsp-mode . lsp-enable-which-key-integration)) ;; Integrate with Which Key
-  :commands (lsp lsp-deferred)
-  ;; :config
-  ;; (setq lsp-auto-guess-root t) ;; Theoretically fixes 'not part of project' issues (but people say it's bad practice)
-  :custom
-  (lsp-keymap-prefix "C-c l")                           ;; Set the prefix for LSP commands.
-  (lsp-inlay-hint-enable t)                             ;; Enable inlay hints.
-  (lsp-completion-provider :none)                       ;; Disable the default completion provider.
-  (lsp-session-file (locate-user-emacs-file ".lsp-session")) ;; Specify session file location.
-  (lsp-log-io nil)                                      ;; Disable IO logging for speed.
-  (lsp-idle-delay 0)                                    ;; Set the delay for LSP to 0 (debouncing).
-  (lsp-keep-workspace-alive nil)                        ;; Disable keeping the workspace alive.
-  ;; Core settings
-  (lsp-enable-xref t)                                   ;; Enable cross-references.
-  (lsp-auto-configure t)                                ;; Automatically configure LSP.
-  (lsp-enable-links nil)                                ;; Disable links.
-  (lsp-eldoc-enable-hover t)                            ;; Enable ElDoc hover.
-  (lsp-enable-file-watchers nil)                        ;; Disable file watchers.
-  (lsp-enable-folding nil)                              ;; Disable folding.
-  (lsp-enable-imenu t)                                  ;; Enable Imenu support.
-  (lsp-enable-indentation nil)                          ;; Disable indentation.
-  (lsp-enable-on-type-formatting nil)                   ;; Disable on-type formatting.
-  (lsp-enable-suggest-server-download t)                ;; Enable server download suggestion.
-  (lsp-enable-symbol-highlighting t)                    ;; Enable symbol highlighting.
-  (lsp-enable-text-document-color nil)                  ;; Disable text document color.
-  ;; Modeline settings
-  (lsp-modeline-code-actions-enable nil)                ;; Keep modeline clean.
-  (lsp-modeline-diagnostics-enable nil)                 ;; Use `flymake' instead.
-  (lsp-modeline-workspace-status-enable t)              ;; Display "LSP" in the modeline when enabled.
-  (lsp-signature-doc-lines 1)                           ;; Limit echo area to one line.
-  (lsp-eldoc-render-all nil)                              ;; Render all ElDoc messages.
-  ;; Completion settings
-  (lsp-completion-enable t)                             ;; Enable completion.
-  (lsp-completion-enable-additional-text-edit t)        ;; Enable additional text edits for completions.
-  (lsp-enable-snippet nil)                              ;; Disable snippets
-  (lsp-completion-show-kind t)                          ;; Show kind in completions.
-  ;; Lens settings
-  (lsp-lens-enable t)                                   ;; Enable lens support.
-  ;; Headerline settings
-  (lsp-headerline-breadcrumb-enable-symbol-numbers t)   ;; Enable symbol numbers in the headerline.
-  (lsp-headerline-arrow "▶")                            ;; Set arrow for headerline.
-  (lsp-headerline-breadcrumb-enable-diagnostics nil)    ;; Disable diagnostics in headerline.
-  (lsp-headerline-breadcrumb-icons-enable nil)          ;; Disable icons in breadcrumb.
-  ;; Semantic settings
-  (lsp-semantic-tokens-enable nil))                     ;; Disable semantic tokens.
+;; This is roughly what an LSP-Mode config would look like
+;; Note I need to install necessary lsps on my system (pacman) and then possibly apply in M-x lsp-server-install
+;; Also note for real usage there would be many more options to configure
+;; (use-package lsp-mode
+;;   :ensure t
+;;   :defer t
+;;   :hook (;; Replace XXX-mode with concrete major mode (e.g. python-mode)
+;; 	 (python-mode . lsp-deferred)
+;; 	 (c-mode . lsp-deferred)
+;; 	 (haskell-mode . lsp-deferred)
+;; 	 ;; Should auto-disconnect lsp-mode when in tramp-mode (hopefully)
+;; 	 (tramp-mode . (lambda () (when (bound-and-true-p lsp-mode) (lsp-disconnect))))
+;;          (lsp-mode . lsp-enable-which-key-integration)) ;; Integrate with Which Key
+;;   :commands
+;;   (lsp lsp-deferred)
+;;   :custom
+;;   (lsp-keymap-prefix "C-c l"))                           ;; Set the prefix for LSP commands.
 
-;; (use-package lsp-pyright
-;;   :hook
-;;   (python-mode . lsp)) ; Maybe this works?
+;; ;; LSP-UI
+;; (use-package lsp-ui)
+
+;; Eglot Mode
+;; I will probably only use this in tramp. For now just gonna comment it out
+;; Only tricky bit of initialization would be getting it to automatically
+;; init in tramp but not regular files. Chatgpt might help. Could also do manually
+(use-package eglot
+  :init
+  (setq eglot-autoshutdown t) ;; shutdown when no more relevant buffers exist
+  (setq flymake-show-diagnostics-at-end-of-line t) ; Doesn't do anything :(
+  :hook ((python-mode . eglot-ensure)
+         (c-mode . eglot-ensure)
+	 (haskell-mode . eglot-ensure)))  
+
+
+;; Specific Language Modes
+(use-package haskell-mode)
+
+(use-package sideline-flymake
+  :init
+  (setq sideline-flymake-display-mode 'line))
+
+(use-package sideline
+  :after sideline-flymake
+  :init
+  (setq sideline-backends-right '(sideline-flymake))
+  (setq sideline-backends-left-skip-current-line t   ; don't display on current line (left)
+        sideline-backends-right-skip-current-line t  ; don't display on current line (right)
+        sideline-order-left 'down                    ; or 'up
+        sideline-order-right 'up                     ; or 'down
+        sideline-format-left "%s   "                 ; format for left aligment
+        sideline-format-right "   %s"                ; format for right aligment
+        sideline-priority 100                        ; overlays' priority
+        sideline-display-backend-name t)            ; display the backend name
+  :hook
+  (flymake-mode . sideline-mode))

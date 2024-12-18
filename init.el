@@ -31,6 +31,7 @@
 
 ;; Misc
 (setq password-cache-expiry nil)
+(add-to-list 'exec-path "~/.ghcup/bin/") ; Haskell LSP installed there
 
 
 (load "~/.emacs.d/packages.el")
@@ -42,7 +43,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(lsp-mode company yasnippet ace-window evil-magit magit projectile evil-collection evil gruvbox-theme helpful which-key doom-modeline marginalia vertico)))
+   '(sideline-flymake lsp-ui haskell-mode lsp-mode company yasnippet ace-window evil-magit magit projectile evil-collection evil gruvbox-theme helpful which-key doom-modeline marginalia vertico)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
