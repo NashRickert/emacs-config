@@ -43,7 +43,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(sideline-flymake lsp-ui haskell-mode lsp-mode company yasnippet ace-window evil-magit magit projectile evil-collection evil gruvbox-theme helpful which-key doom-modeline marginalia vertico)))
+   '(eglot-booster sideline-flymake lsp-ui haskell-mode lsp-mode company yasnippet ace-window evil-magit magit projectile evil-collection evil gruvbox-theme helpful which-key doom-modeline marginalia vertico))
+ '(package-vc-selected-packages
+   '((eglot-booster :vc-backend Git :url "https://github.com/jdtsmith/eglot-booster"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

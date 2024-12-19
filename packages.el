@@ -15,8 +15,12 @@
 (use-package vertico
   :init
   (vertico-mode)
+  :bind
+  (:map vertico-map
+	("C-j" . vertico-next)
+	("C-k" . vertico-previous))
   :custom
-  (vertico-resize t))
+  (vertico-resize t)) 
 
 (use-package marginalia
   ; I believe this adjusts level of annotation
@@ -87,7 +91,7 @@
   evil
   :config
   (evil-collection-init))
-  
+
 
 ;; Projectile
 ;; Note to self: This is awesome and can't believe I didn't use before
@@ -106,7 +110,7 @@
   ;; This would make magit oben its buffer in the same window by default
   ;; :custom
   ;; (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
-  
+
 
 ;; Ace-Window
 (use-package ace-window
@@ -118,22 +122,25 @@
 
 
 ;; YASnippet
+;; Karthink does something weird with warning which I ignore at my own peril
 (use-package yasnippet
   :config
   (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
-  (yas-global-mode 1))
+  (yas-global-mode 1)
+  ;; Allow snippets in side of snippets
+  (setq yas-triggers-in-field t))
 
 
 ;; Company
 ;; I copy pasted this from the Emacs-kick init
 (use-package company
-  :defer t 
+  :defer t
   :ensure t
   :custom
   (company-tooltip-align-annotations t)      ;; Align annotations with completions.
   (company-minimum-prefix-length 1)          ;; Trigger completion after typing 1 character
   (company-idle-delay 0.0)                   ;; Delay before showing completion (adjust as needed)
-  (company-tooltip-maximum-width 50) 
+  (company-tooltip-maximum-width 50)
   :config
 
   ;; While using C-p C-n to select a completion candidate
@@ -173,36 +180,128 @@
 ;; (use-package lsp-ui)
 
 ;; Eglot Mode
-;; I will probably only use this in tramp. For now just gonna comment it out
-;; Only tricky bit of initialization would be getting it to automatically
-;; init in tramp but not regular files. Chatgpt might help. Could also do manually
+;; Using this for my minimal lsp
 (use-package eglot
-  :init
-  (setq eglot-autoshutdown t) ;; shutdown when no more relevant buffers exist
-  (setq flymake-show-diagnostics-at-end-of-line t) ; Doesn't do anything :(
-  :hook ((python-mode . eglot-ensure)
-         (c-mode . eglot-ensure)
-	 (haskell-mode . eglot-ensure)))  
+:init
+(setq eglot-autoshutdown t) ;; shutdown when no more relevant buffers exist
+(setq flymake-show-diagnostics-at-end-of-line t) ; Doesn't do anything :(
+:hook ((python-mode . eglot-ensure)
+	(c-mode . eglot-ensure)
+	(haskell-mode . eglot-ensure)))
 
+;; Note: wraps around emacs-lsp-booster installed from AUR
+;; Theoretically improves performance
+(use-package eglot-booster
+  :after eglot
+  :config (eglot-booster-mode))
 
 ;; Specific Language Modes
 (use-package haskell-mode)
 
+;; Sideline Modes
+;; Used to get sideline diagnostics for eglot
+;; Note sideline is the frontend, sideline-flymake the backend. See github for more info
 (use-package sideline-flymake
-  :init
-  (setq sideline-flymake-display-mode 'line))
+:init
+(setq sideline-flymake-display-mode 'line))
 
 (use-package sideline
-  :after sideline-flymake
-  :init
-  (setq sideline-backends-right '(sideline-flymake))
-  (setq sideline-backends-left-skip-current-line t   ; don't display on current line (left)
-        sideline-backends-right-skip-current-line t  ; don't display on current line (right)
-        sideline-order-left 'down                    ; or 'up
-        sideline-order-right 'up                     ; or 'down
-        sideline-format-left "%s   "                 ; format for left aligment
-        sideline-format-right "   %s"                ; format for right aligment
-        sideline-priority 100                        ; overlays' priority
-        sideline-display-backend-name t)            ; display the backend name
+:after sideline-flymake
+:init
+(setq sideline-backends-right '(sideline-flymake))
+(setq sideline-backends-left-skip-current-line t   ; don't display on current line (left)
+	sideline-backends-right-skip-current-line t  ; don't display on current line (right)
+	sideline-order-left 'down                    ; or 'up
+	sideline-order-right 'up                     ; or 'down
+	sideline-format-left "%s   "                 ; format for left aligment
+	sideline-format-right "   %s"                ; format for right aligment
+	sideline-priority 100                        ; overlays' priority
+	sideline-display-backend-name t)            ; display the backend name
+:hook
+(flymake-mode . sideline-mode))
+
+
+;; LATEX
+
+;; Auctex
+
+;; Possible extra desired functionality:
+;; Highlight LaTeX dollar signs as delimiters
+;; Could try autocompleting snippers, either as karthink does
+;; or with auto-activating-snippets-package
+;; company-auctex
+;; C-c C-p to preview
+;; Read Auctex manual (C-h i m auctex)
+
+;; Latex settings. Note automatic auctex installation
+(use-package latex
+  :ensure auctex
   :hook
-  (flymake-mode . sideline-mode))
+  ((plain-TeX-mode . LaTeX-mode)
+   (LaTeX-mode . prettify-symbols-mode)
+   (LaTeX-mode . LaTeX-math-mode)
+  :config
+  (setq LaTeX-electric-left-right-brace t)
+  (setq TeX-electric-math '("$" . "$")) ;; with cdlatex functionality, may be able to remove
+  ;; Try to get a sense of what this does before including it
+  ;; (setq TeX-view-program-selection '((output-pdf "PDF Tools")) TeX-source-correlate-start-server t)
+  ;; (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
+  )
+
+;; Size scale function available from karthink 
+(use-package preview
+  :after latex)
+
+;; CDLatex settings
+(use-package cdlatex
+  :ensure t
+  :hook (LaTeX-mode . turn-on-cdlatex)
+  :bind (:map cdlatex-mode-map 
+              ("<tab>" . cdlatex-tab))
+  :config
+  ;; should fix issue with not having matching parens
+  (setq cdlatex-paired-parens "$[{") 
+  ;; should remove parentheses from cdlatex so hopefully they function normally. If not, add them back to above command
+  (define-key cdlatex-mode-map  "(" nil))
+
+
+;; CONTINUE HERE
+
+;; CDLatex integration with YaSnippet: Allow cdlatex tab to work inside Yas fields
+;; Unfortunately, this complexity seems necessary
+(use-package cdlatex
+  :hook ((cdlatex-tab . yas-expand)
+         (cdlatex-tab . cdlatex-in-yas-field))
+  :config
+  (use-package yasnippet
+    :bind (:map yas-keymap
+           ("<tab>" . yas-next-field-or-cdlatex)
+           ("TAB" . yas-next-field-or-cdlatex))
+    :config
+    (defun cdlatex-in-yas-field ()
+      ;; Check if we're at the end of the Yas field
+      (when-let* ((_ (overlayp yas--active-field-overlay))
+                  (end (overlay-end yas--active-field-overlay)))
+        (if (>= (point) end)
+            ;; Call yas-next-field if cdlatex can't expand here
+            (let ((s (thing-at-point 'sexp)))
+              (unless (and s (assoc (substring-no-properties s)
+                                    cdlatex-command-alist-comb))
+                (yas-next-field-or-maybe-expand)
+                t))
+          ;; otherwise expand and jump to the correct location
+          (let (cdlatex-tab-hook minp)
+            (setq minp
+                  (min (save-excursion (cdlatex-tab)
+                                       (point))
+                       (overlay-end yas--active-field-overlay)))
+            (goto-char minp) t))))
+
+    (defun yas-next-field-or-cdlatex nil
+      (interactive)
+      "Jump to the next Yas field correctly with cdlatex active."
+      (if
+          (or (bound-and-true-p cdlatex-mode)
+              (bound-and-true-p org-cdlatex-mode))
+          (cdlatex-tab)
+        (yas-next-field-or-maybe-expand)))))
