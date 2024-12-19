@@ -181,6 +181,10 @@
 
 ;; Eglot Mode
 ;; Using this for my minimal lsp
+;; Note there are some possible performance improvements from
+;; (setq eglot-events-buffer-size 0)
+;; (fset #'jsonrpc--log-event #'ignore)
+;; But I have no performance issues so I won't bother
 (use-package eglot
 :init
 (setq eglot-autoshutdown t) ;; shutdown when no more relevant buffers exist
@@ -226,11 +230,10 @@
 ;; Auctex
 
 ;; Possible extra desired functionality:
-;; Highlight LaTeX dollar signs as delimiters
 ;; Could try autocompleting snippers, either as karthink does
-;; or with auto-activating-snippets-package
-;; company-auctex
+;; or with auto-activating-snippets package
 ;; C-c C-p to preview
+;; C-c C-g and C-mouse-1 to jump between places in pdf and latex
 ;; Read Auctex manual (C-h i m auctex)
 
 ;; Latex settings. Note automatic auctex installation
@@ -240,13 +243,16 @@
   ((plain-TeX-mode . LaTeX-mode)
    (LaTeX-mode . prettify-symbols-mode)
    (LaTeX-mode . LaTeX-math-mode)
+   (LaTeX-mode . font-lock-mode) ; it may do this automatically already
+   (LaTeX-mode . my-LaTeX-mode-dollars) ;; syntax highlights dollar signs properly
+   (TeX-after-compilation-finished . TeX-revert-document-buffer))
   :config
+  (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
+  (setq TeX-source-correlate-start-server t)
   (setq LaTeX-electric-left-right-brace t)
-  (setq TeX-electric-math '("$" . "$")) ;; with cdlatex functionality, may be able to remove
-  ;; Try to get a sense of what this does before including it
-  ;; (setq TeX-view-program-selection '((output-pdf "PDF Tools")) TeX-source-correlate-start-server t)
-  ;; (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
-  )
+  (setq TeX-electric-math '("$" . "$"))
+  (defun my-LaTeX-mode-dollars () (font-lock-add-keywords nil `((,(rx "$") (0 'success t))) t)))
+  
 
 ;; Size scale function available from karthink 
 (use-package preview
@@ -259,13 +265,10 @@
   :bind (:map cdlatex-mode-map 
               ("<tab>" . cdlatex-tab))
   :config
-  ;; should fix issue with not having matching parens
+  ;; These intended to get parentheses to work, but possibly not necessary
   (setq cdlatex-paired-parens "$[{") 
-  ;; should remove parentheses from cdlatex so hopefully they function normally. If not, add them back to above command
   (define-key cdlatex-mode-map  "(" nil))
 
-
-;; CONTINUE HERE
 
 ;; CDLatex integration with YaSnippet: Allow cdlatex tab to work inside Yas fields
 ;; Unfortunately, this complexity seems necessary
@@ -305,3 +308,17 @@
               (bound-and-true-p org-cdlatex-mode))
           (cdlatex-tab)
         (yas-next-field-or-maybe-expand)))))
+
+
+;; PDF-Tools
+
+;; In Auctex, theoretically can jump to point in pdf from source with C-c C-g
+;; If this doesn't work, indicates additional work needed in config
+;; (And jump to source from pdf with C-mouse-1)
+(use-package pdf-tools
+  :custom
+  (pdf-view-resize-factor 1.1)
+  
+  :config
+  (pdf-tools-install)
+  (setq-default pdf-view-display-size 'fit-page))
