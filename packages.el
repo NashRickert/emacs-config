@@ -154,7 +154,11 @@
   (define-key company-active-map [ret] 'company-complete-selection)
   (define-key company-active-map (kbd "RET") 'company-complete-selection)
   :hook
-  (after-init . global-company-mode)) ;; Enable Company Mode globally after initialization.
+  ;; Enable Company Mode globally after initialization.
+  (after-init . global-company-mode) 
+  ;; Use of tabs doesn't play nice in latex mode
+  (cdlatex-mode . (lambda() (company-mode 0)))) 
+
 
 
 ;; LSP-Mode
@@ -233,7 +237,7 @@
 ;; Could try autocompleting snippers, either as karthink does
 ;; or with auto-activating-snippets package
 ;; C-c C-p to preview
-;; C-c C-g and C-mouse-1 to jump between places in pdf and latex
+;; C-c C-v and C-mouse-1 to jump between places in pdf and latex
 ;; Read Auctex manual (C-h i m auctex)
 
 ;; Latex settings. Note automatic auctex installation
@@ -248,15 +252,12 @@
    (TeX-after-compilation-finished . TeX-revert-document-buffer))
   :config
   (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
+  (setq TeX-source-correlate-mode t)
   (setq TeX-source-correlate-start-server t)
   (setq LaTeX-electric-left-right-brace t)
   (setq TeX-electric-math '("$" . "$"))
-  (defun my-LaTeX-mode-dollars () (font-lock-add-keywords nil `((,(rx "$") (0 'success t))) t)))
+  (defun my-LaTeX-mode-dollars () (font-lock-add-keywords nil `((,(rx "$") (0 'success t))) t))) 
   
-
-;; Size scale function available from karthink 
-(use-package preview
-  :after latex)
 
 ;; CDLatex settings
 (use-package cdlatex
@@ -318,6 +319,8 @@
 (use-package pdf-tools
   :custom
   (pdf-view-resize-factor 1.1)
+  :hook
+  (pdf-view-mode . (lambda () (display-line-numbers-mode nil)))
   
   :config
   (pdf-tools-install)
