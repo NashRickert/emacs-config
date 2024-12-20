@@ -79,6 +79,7 @@
   (setq evil-want-C-i-jump nil)
   :config
   (evil-mode 1)
+  (evil-set-undo-system 'undo-redo)
   ;; Let C-g exit insert mode too
   (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
   ;; Ret makes new line and stays in normal mode
@@ -319,9 +320,23 @@
 (use-package pdf-tools
   :custom
   (pdf-view-resize-factor 1.1)
-  :hook
-  (pdf-view-mode . (lambda () (display-line-numbers-mode nil)))
-  
   :config
   (pdf-tools-install)
   (setq-default pdf-view-display-size 'fit-page))
+
+
+;; Auto-Acativating-Snippets
+;; Should definitely add more snippets based on what I use most for my classes
+;; The github page gives a nice example config with some more ways to use these
+;; Can disable snippets in certain modes, bind the to functions, etc.
+;; This just works ... wow
+(use-package aas
+  :hook
+  (LaTeX-mode . aas-activate-for-major-mode)
+  :config
+  (aas-set-snippets 'LaTeX-mode
+    ;; "\\[" '(yas "\\[ $0 \\]")
+    :cond #'texmathp ; expand only in math mode
+    ;; "\\{ " '(yas "\\{ $0 \\}")
+    "int" '(yas "\\int_{$1}^{$2}$0")
+    "sum" '(yas "\\sum_{$1}^{$2}$0")))

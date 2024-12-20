@@ -20,7 +20,8 @@
 ;; Possible issues for 1000+ lines mitigated by grow-only
 (setq-default display-line-numbers-width 3) 
 (setq-default display-line-numbers-grow-only t) 
-(global-display-line-numbers-mode t)
+(add-hook 'prog-mode-hook (lambda () (display-line-numbers-mode 1)))
+(add-hook 'text-mode-hook (lambda () (display-line-numbers-mode 1)))
 
 ;; Keybindings
 (define-key key-translation-map (kbd "ESC") (kbd "C-g")) 
@@ -43,7 +44,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(eglot-booster sideline-flymake lsp-ui haskell-mode lsp-mode company yasnippet ace-window evil-magit magit projectile evil-collection evil gruvbox-theme helpful which-key doom-modeline marginalia vertico))
+   '(aas eglot-booster sideline-flymake lsp-ui haskell-mode lsp-mode company yasnippet ace-window evil-magit magit projectile evil-collection evil gruvbox-theme helpful which-key doom-modeline marginalia vertico))
  '(package-vc-selected-packages
    '((eglot-booster :vc-backend Git :url "https://github.com/jdtsmith/eglot-booster"))))
 (custom-set-faces
