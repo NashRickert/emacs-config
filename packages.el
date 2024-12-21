@@ -1,3 +1,6 @@
+;; -*- lexical-binding: t -*-
+;; Note the above is necessary for consult and related packages
+
 ;; Package Management
 
 ;; Setting up use-package
@@ -35,11 +38,38 @@
   (completion-category-default nil) ; orderless is used by default
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
-;; Could consider Embark and Consult packages in addition
-;; They seem cool but beyond the scope of what I need/want rn
+;; Note: I tried to keep the Consult and Embark implementations as minimalistic as possible
+;; The githubs give slightly more expansive configs that can serve as inspiration
+;; Also note Consult has a ton of commands and there is probably a lot to learn
+
+;; Consult
+;; No keybindings come predefined. I do a couple in the evil-section using a leader keybinding
+;; Anything I use a lot probably deserves a keybinding
+(use-package consult
+  :init
+  (setq xref-show-xrefs-function #'consult-xref)
+  (setq xref-show-definitions-function #'consult-xref))
+
+
+;; Embark
+(use-package embark
+  :bind
+  ("C-." . embark-act)
+  ("C-;" . embark-dwim)
+  ("C-h B" . embark-bindings)) ;; Alternative for describe-bindings
+
+;; Embark-consult
+(use-package embark-consult
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
+
 
 ;; Doom Modeline
 (use-package doom-modeline
+  :custom
+  (doom-modeline-project-detection 'project)
+  (doom-modeline-buffer-name t)
   :init (doom-modeline-mode 1))
 
 
@@ -85,7 +115,80 @@
   ;; Ret makes new line and stays in normal mode
   (define-key evil-normal-state-map (kbd "RET") (lambda () (interactive) (evil-open-below 1) (evil-normal-state)))
   (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-  (evil-global-set-key 'motion "k" 'evil-previous-visual-line))
+  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+
+  (setq evil-want-fine-undo t)
+  (setq evil-leader/in-all-states t)
+
+  (evil-set-leader 'normal (kbd "SPC"))
+  (evil-set-leader 'visual (kbd "SPC"))
+
+  ;; Note: I copped most/all of these keybindings from emacs-kick
+  ;; A lot of them overlaod existing keybindings with a leader key
+  ;; But a lot of them provide keybindings to things that don't have them, mainly the consult commands
+  
+  ;; Keybindings for searching and finding files.
+  (evil-define-key 'normal 'global (kbd "<leader> s f") 'consult-find)
+  (evil-define-key 'normal 'global (kbd "<leader> s g") 'consult-grep)
+  (evil-define-key 'normal 'global (kbd "<leader> s G") 'consult-git-grep)
+  (evil-define-key 'normal 'global (kbd "<leader> s r") 'consult-ripgrep)
+  (evil-define-key 'normal 'global (kbd "<leader> s h") 'consult-info)
+  (evil-define-key 'normal 'global (kbd "<leader> /") 'consult-line)
+
+  ;; Dired commands for file management
+  (evil-define-key 'normal 'global (kbd "<leader> x d") 'dired)
+  (evil-define-key 'normal 'global (kbd "<leader> x j") 'dired-jump)
+  (evil-define-key 'normal 'global (kbd "<leader> x f") 'find-file)
+
+  ;; Buffer management keybindings
+  (evil-define-key 'normal 'global (kbd "] b") 'switch-to-next-buffer) ;; Switch to next buffer
+  (evil-define-key 'normal 'global (kbd "[ b") 'switch-to-prev-buffer) ;; Switch to previous buffer
+  (evil-define-key 'normal 'global (kbd "<leader> b i") 'consult-buffer) ;; Open consult buffer list
+  (evil-define-key 'normal 'global (kbd "<leader> b b") 'ibuffer) ;; Open Ibuffer
+  (evil-define-key 'normal 'global (kbd "<leader> b d") 'kill-current-buffer) ;; Kill current buffer
+  (evil-define-key 'normal 'global (kbd "<leader> b k") 'kill-current-buffer) ;; Kill current buffer
+  (evil-define-key 'normal 'global (kbd "<leader> b x") 'kill-current-buffer) ;; Kill current buffer
+  (evil-define-key 'normal 'global (kbd "<leader> b s") 'save-buffer) ;; Save buffer
+  (evil-define-key 'normal 'global (kbd "<leader> b l") 'consult-buffer) ;; Consult buffer
+  (evil-define-key 'normal 'global (kbd "<leader>SPC") 'consult-buffer) ;; Consult buffer
+
+  ;; Project management keybindings
+  (evil-define-key 'normal 'global (kbd "<leader> p b") 'consult-project-buffer) ;; Consult project buffer
+  (evil-define-key 'normal 'global (kbd "<leader> p p") 'project-switch-project) ;; Switch project
+  (evil-define-key 'normal 'global (kbd "<leader> p f") 'project-find-file) ;; Find file in project
+  (evil-define-key 'normal 'global (kbd "<leader> p g") 'project-find-regexp) ;; Find regexp in project
+  (evil-define-key 'normal 'global (kbd "<leader> p k") 'project-kill-buffers) ;; Kill project buffers
+  (evil-define-key 'normal 'global (kbd "<leader> p D") 'project-dired) ;; Dired for project
+
+  ;; Yank from kill ring
+  (evil-define-key 'normal 'global (kbd "P") 'consult-yank-from-kill-ring)
+  (evil-define-key 'normal 'global (kbd "<leader> P") 'consult-yank-from-kill-ring)
+
+  ;; Embark actions for contextual commands
+  (evil-define-key 'normal 'global (kbd "<leader> .") 'embark-act)
+
+  ;; Help keybindings
+  (evil-define-key 'normal 'global (kbd "<leader> h m") 'describe-mode) ;; Describe current mode
+  (evil-define-key 'normal 'global (kbd "<leader> h f") 'describe-function) ;; Describe function
+  (evil-define-key 'normal 'global (kbd "<leader> h v") 'describe-variable) ;; Describe variable
+  (evil-define-key 'normal 'global (kbd "<leader> h k") 'describe-key) ;; Describe key
+
+  ;; Tab navigation
+  (evil-define-key 'normal 'global (kbd "] t") 'tab-next) ;; Go to next tab
+  (evil-define-key 'normal 'global (kbd "[ t") 'tab-previous) ;; Go to previous tab
+
+  ;; Commenting functionality for single and multiple lines
+  (evil-define-key 'normal 'global (kbd "gcc")
+    (lambda ()
+      (interactive)
+      (if (not (use-region-p))
+          (comment-or-uncomment-region (line-beginning-position) (line-end-position)))))
+  
+  (evil-define-key 'visual 'global (kbd "gc")
+    (lambda ()
+      (interactive)
+      (if (use-region-p)
+          (comment-or-uncomment-region (region-beginning) (region-end))))))
 
 (use-package evil-collection
   :after
@@ -314,7 +417,7 @@
 
 ;; PDF-Tools
 
-;; In Auctex, theoretically can jump to point in pdf from source with C-c C-g
+;; In Auctex, theoretically can jump to point in pdf from source with C-c C-v
 ;; If this doesn't work, indicates additional work needed in config
 ;; (And jump to source from pdf with C-mouse-1)
 (use-package pdf-tools

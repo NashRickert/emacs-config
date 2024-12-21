@@ -32,7 +32,16 @@
 
 ;; Misc
 (setq password-cache-expiry nil)
+(setq switch-to-buffer-obey-display-actions t)
+(savehist-mode 1)
+(setq history-length 25)
+(global-auto-revert-mode 1)
+;; Winner-Mode: reverse changes in window configuration with C-c <left> and redo with C-c <right>
+(winner-mode 1) 
+
 (add-to-list 'exec-path "~/.ghcup/bin/") ; Haskell LSP installed there
+
+
 
 
 (load "~/.emacs.d/packages.el")
