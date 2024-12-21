@@ -86,7 +86,7 @@
   :init
   (which-key-mode)
   :config
-  (setq which-key-idle-delay 0.25))
+  (setq which-key-idle-delay 0.20))
 
 ;; Helpful
 ;; Should remap the most important help commands to helpful
@@ -110,6 +110,8 @@
   :config
   (evil-mode 1)
   (evil-set-undo-system 'undo-redo)
+  ;; Evil mode overrides embark-act otherwise
+  (define-key evil-normal-state-map (kbd "C-.") 'embark-act)
   ;; Let C-g exit insert mode too
   (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
   ;; Ret makes new line and stays in normal mode
@@ -161,7 +163,7 @@
   (evil-define-key 'normal 'global (kbd "<leader> p D") 'project-dired) ;; Dired for project
 
   ;; Yank from kill ring
-  (evil-define-key 'normal 'global (kbd "P") 'consult-yank-from-kill-ring)
+  ;; (evil-define-key 'normal 'global (kbd "P") 'consult-yank-from-kill-ring)
   (evil-define-key 'normal 'global (kbd "<leader> P") 'consult-yank-from-kill-ring)
 
   ;; Embark actions for contextual commands
@@ -194,6 +196,9 @@
   :after
   evil
   :config
+  ;; This is done to make using the leader possible in dired mode
+  ;; Add other modes to this as it becomes necessary due to inconvenience
+  (evil-collection-translate-key 'normal 'dired-mode-map " " 'nil)
   (evil-collection-init))
 
 
