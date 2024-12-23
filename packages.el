@@ -119,7 +119,7 @@
   (evil-global-set-key 'motion "j" 'evil-next-visual-line)
   (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
 
-  (setq evil-want-fine-undo t)
+  ;; (setq evil-want-fine-undo t)
   (setq evil-leader/in-all-states t)
 
   (evil-set-leader 'normal (kbd "SPC"))
@@ -196,10 +196,10 @@
   :after
   evil
   :config
+  (evil-collection-init)
   ;; This is done to make using the leader possible in dired mode
   ;; Add other modes to this as it becomes necessary due to inconvenience
-  (evil-collection-translate-key 'normal 'dired-mode-map " " 'nil)
-  (evil-collection-init))
+  (evil-collection-translate-key 'normal 'dired-mode-map " " 'nil))
 
 
 ;; Projectile
@@ -260,11 +260,13 @@
 				(company-show-doc-buffer)))
   (define-key company-active-map [tab] 'company-complete-selection)
   (define-key company-active-map (kbd "TAB") 'company-complete-selection)
-  (define-key company-active-map [ret] 'company-complete-selection)
-  (define-key company-active-map (kbd "RET") 'company-complete-selection)
+  ;; (define-key company-active-map [ret] 'company-complete-selection)
+  ;; (define-key company-active-map (kbd "RET") 'company-complete-selection)
   :hook
   ;; Enable Company Mode globally after initialization.
   (after-init . global-company-mode) 
+  ;; For now I think eshell mode is fine so long as command doesn't complete
+  ;; (eshell-mode . (lambda() (company-mode 0)))
   ;; Use of tabs doesn't play nice in latex mode
   (cdlatex-mode . (lambda() (company-mode 0)))) 
 
