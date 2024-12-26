@@ -26,6 +26,16 @@
 ;; Keybindings
 (define-key key-translation-map (kbd "ESC") (kbd "C-g")) 
 
+;; M-( works automatically. This is to allow wrapping over selected text in visual mode
+(global-set-key (kbd "M-[") 'insert-pair)
+(global-set-key (kbd "M-{") 'insert-pair)
+(global-set-key (kbd "M-\"") 'insert-pair)
+;; These settings allow deleting of matching with these commands (done on first delimiter)
+(global-set-key (kbd "M-)") 'delete-pair)
+(global-set-key (kbd "M-]") 'delete-pair)
+(global-set-key (kbd "M-}") 'delete-pair)
+
+
 ;; Parentheses
 (electric-pair-mode 1)
 (setq electric-pair-pairs '((?\" . ?\") (?\{ . ?\}) (?\( . ?\))))
@@ -55,7 +65,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(aas eglot-booster sideline-flymake lsp-ui haskell-mode lsp-mode company yasnippet ace-window evil-magit magit projectile evil-collection evil gruvbox-theme helpful which-key doom-modeline marginalia vertico))
+   '(evil-surround smartparens aas eglot-booster sideline-flymake lsp-ui haskell-mode lsp-mode company yasnippet ace-window evil-magit magit projectile evil-collection evil gruvbox-theme helpful which-key doom-modeline marginalia vertico))
  '(package-vc-selected-packages
    '((eglot-booster :vc-backend Git :url "https://github.com/jdtsmith/eglot-booster"))))
 (custom-set-faces

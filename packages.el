@@ -128,6 +128,9 @@
   ;; Note: I copped most/all of these keybindings from emacs-kick
   ;; A lot of them overlaod existing keybindings with a leader key
   ;; But a lot of them provide keybindings to things that don't have them, mainly the consult commands
+
+  ;; Miscellaneous keybindings
+  (evil-define-key 'normal 'global (kbd "<leader> j") 'ace-window)
   
   ;; Keybindings for searching and finding files.
   (evil-define-key 'normal 'global (kbd "<leader> s f") 'consult-find)
@@ -141,6 +144,7 @@
   (evil-define-key 'normal 'global (kbd "<leader> x d") 'dired)
   (evil-define-key 'normal 'global (kbd "<leader> x j") 'dired-jump)
   (evil-define-key 'normal 'global (kbd "<leader> x f") 'find-file)
+  (evil-define-key 'normal 'global (kbd "<leader> x s") 'save-buffer)
 
   ;; Buffer management keybindings
   (evil-define-key 'normal 'global (kbd "] b") 'switch-to-next-buffer) ;; Switch to next buffer
@@ -201,6 +205,13 @@
   ;; Add other modes to this as it becomes necessary due to inconvenience
   (evil-collection-translate-key 'normal 'dired-mode-map " " 'nil))
 
+;; Evil Surround
+;; Note that this provides another way to surround in visual mode
+;; Aside from the M-({[ keybindings I defined
+(use-package evil-surround
+  :config
+  (global-evil-surround-mode 1))
+
 
 ;; Projectile
 ;; Note to self: This is awesome and can't believe I didn't use before
@@ -260,8 +271,9 @@
 				(company-show-doc-buffer)))
   (define-key company-active-map [tab] 'company-complete-selection)
   (define-key company-active-map (kbd "TAB") 'company-complete-selection)
-  ;; (define-key company-active-map [ret] 'company-complete-selection)
-  ;; (define-key company-active-map (kbd "RET") 'company-complete-selection)
+  (define-key company-active-map [ret] nil)
+  (define-key company-active-map (kbd "<return>") nil)
+  (define-key company-active-map (kbd "RET") nil)
   :hook
   ;; Enable Company Mode globally after initialization.
   (after-init . global-company-mode) 
