@@ -65,7 +65,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(evil-surround smartparens aas eglot-booster sideline-flymake lsp-ui haskell-mode lsp-mode company yasnippet ace-window evil-magit magit projectile evil-collection evil gruvbox-theme helpful which-key doom-modeline marginalia vertico))
+   '(vterm evil-surround smartparens aas eglot-booster sideline-flymake lsp-ui haskell-mode lsp-mode company yasnippet ace-window evil-magit magit projectile evil-collection evil gruvbox-theme helpful which-key doom-modeline marginalia vertico))
  '(package-vc-selected-packages
    '((eglot-booster :vc-backend Git :url "https://github.com/jdtsmith/eglot-booster"))))
 (custom-set-faces

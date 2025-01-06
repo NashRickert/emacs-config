@@ -202,8 +202,10 @@
   :config
   (evil-collection-init)
   ;; This is done to make using the leader possible in dired mode
-  ;; Add other modes to this as it becomes necessary due to inconvenience
-  (evil-collection-translate-key 'normal 'dired-mode-map " " 'nil))
+  ;; Note with-eval-after-load to make sure it's applied after dired-mode-map exists
+  (with-eval-after-load 'dired
+      (evil-collection-translate-key 'normal 'dired-mode-map " " 'nil)))
+
 
 ;; Evil Surround
 ;; Note that this provides another way to surround in visual mode
@@ -462,3 +464,7 @@
     ;; "\\{ " '(yas "\\{ $0 \\}")
     "int" '(yas "\\int_{$1}^{$2}$0")
     "sum" '(yas "\\sum_{$1}^{$2}$0")))
+
+
+;; Vterm
+(use-package vterm)
