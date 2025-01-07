@@ -3,6 +3,7 @@
 # key: preamble
 # --
 \documentclass{article}
+\usepackage[left=3cm, right=3cm]{geometry}
 \usepackage{graphicx} 
 \usepackage{amssymb}
 \usepackage{amsthm}
@@ -12,6 +13,9 @@
 \usepackage{hyperref}
 % anything surronded by this new command will not do anything
 \newcommand{\mycomment}[1]{} 
+% Use like: \halfopen{0}{1} to get (0,1] 
+\newcommand\halfclosed[2]{\ensuremath{[#1,#2)}}
+\newcommand\halfopen[2]{\ensuremath{(#1,#2]}}
 \newcommand{\C}{\mathbb{C}}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\Z}{\mathbb{Z}}
@@ -25,5 +29,6 @@
 \author{Nash Rickert}
 
 \begin{document}
+\maketitle
 $0
 \end{document}

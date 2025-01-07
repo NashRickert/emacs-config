@@ -204,6 +204,7 @@
   ;; This is done to make using the leader possible in dired mode
   ;; Note with-eval-after-load to make sure it's applied after dired-mode-map exists
   (with-eval-after-load 'dired
+      (evil-collection-translate-key 'normal 'help-mode-map " " 'nil)
       (evil-collection-translate-key 'normal 'dired-mode-map " " 'nil)))
 
 
@@ -462,6 +463,7 @@
     ;; "\\[" '(yas "\\[ $0 \\]")
     :cond #'texmathp ; expand only in math mode
     ;; "\\{ " '(yas "\\{ $0 \\}")
+    "cal" '(yas "\\mathcal{$1}$0")
     "int" '(yas "\\int_{$1}^{$2}$0")
     "sum" '(yas "\\sum_{$1}^{$2}$0")))
 
