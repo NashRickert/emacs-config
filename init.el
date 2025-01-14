@@ -11,6 +11,7 @@
 (setq initial-scratch-message "Hello Nash")
 
 ;; Visual preferences
+(global-visual-line-mode 1)
 (set-fringe-mode 10) ; Sets size of edge fringe
 (column-number-mode t)
 (load-theme 'gruvbox-dark-hard t)
@@ -65,9 +66,10 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(vterm evil-surround smartparens aas eglot-booster sideline-flymake lsp-ui haskell-mode lsp-mode company yasnippet ace-window evil-magit magit projectile evil-collection evil gruvbox-theme helpful which-key doom-modeline marginalia vertico))
+   '(ultra-scroll vterm evil-surround smartparens aas eglot-booster sideline-flymake lsp-ui haskell-mode lsp-mode company yasnippet ace-window evil-magit magit projectile evil-collection evil gruvbox-theme helpful which-key doom-modeline marginalia vertico))
  '(package-vc-selected-packages
-   '((eglot-booster :vc-backend Git :url "https://github.com/jdtsmith/eglot-booster"))))
+   '((ultra-scroll :vc-backend Git :url "https://github.com/jdtsmith/ultra-scroll")
+     (eglot-booster :vc-backend Git :url "https://github.com/jdtsmith/eglot-booster"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -201,10 +201,13 @@
   evil
   :config
   (evil-collection-init)
-  ;; This is done to make using the leader possible in dired mode
-  ;; Note with-eval-after-load to make sure it's applied after dired-mode-map exists
+
+  ;; Note with-eval-after-load to make sure changes are only applied after map is loaded
+  ;; Also note each call needs its own with-eval-after-load call
+  (evil-collection-translate-key 'normal 'help-mode-map " " 'nil)
+  (with-eval-after-load 'pdf-tools
+      (evil-collection-translate-key 'normal 'pdf-view-mode-map " " 'nil))
   (with-eval-after-load 'dired
-      (evil-collection-translate-key 'normal 'help-mode-map " " 'nil)
       (evil-collection-translate-key 'normal 'dired-mode-map " " 'nil)))
 
 
@@ -321,6 +324,7 @@
 (setq flymake-show-diagnostics-at-end-of-line t) ; Doesn't do anything :(
 :hook ((python-mode . eglot-ensure)
 	(c-mode . eglot-ensure)
+	(java-mode . eglot-ensure)
 	(haskell-mode . eglot-ensure)))
 
 ;; Note: wraps around emacs-lsp-booster installed from AUR
@@ -375,6 +379,7 @@
    (LaTeX-mode . LaTeX-math-mode)
    (LaTeX-mode . font-lock-mode) ; it may do this automatically already
    (LaTeX-mode . my-LaTeX-mode-dollars) ;; syntax highlights dollar signs properly
+   (LaTeX-mode . preview-larger-previews)
    (TeX-after-compilation-finished . TeX-revert-document-buffer))
   :config
   (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
@@ -382,7 +387,10 @@
   (setq TeX-source-correlate-start-server t)
   (setq LaTeX-electric-left-right-brace t)
   (setq TeX-electric-math '("$" . "$"))
-  (defun my-LaTeX-mode-dollars () (font-lock-add-keywords nil `((,(rx "$") (0 'success t))) t))) 
+  (defun my-LaTeX-mode-dollars () (font-lock-add-keywords nil `((,(rx "$") (0 'success t))) t))
+  (defun preview-larger-previews ()
+    (setq preview-scale-function
+          (lambda () (* 1.25 (funcall (preview-scale-from-face))))))) 
   
 
 ;; CDLatex settings
@@ -460,9 +468,11 @@
   (LaTeX-mode . aas-activate-for-major-mode)
   :config
   (aas-set-snippets 'LaTeX-mode
-    ;; "\\[" '(yas "\\[ $0 \\]")
+    ;; " \\[" '(yas "\\[ $0 \\]")
     :cond #'texmathp ; expand only in math mode
-    ;; "\\{ " '(yas "\\{ $0 \\}")
+    ;; " \\{ " '(yas "\\{ $0 \\}")
+    "frak" '(yas "\\mathfrak{$1}$0")
+    "bb" '(yas "\\mathbb{$1}$0")
     "cal" '(yas "\\mathcal{$1}$0")
     "int" '(yas "\\int_{$1}^{$2}$0")
     "sum" '(yas "\\sum_{$1}^{$2}$0")))
@@ -470,3 +480,19 @@
 
 ;; Vterm
 (use-package vterm)
+
+;; Ultra Scroll
+;; Note that this is not on MELPA, so there is one more step involving package-vc-install
+;; If that hasn't already been done. More info on the package's github
+;; I turned this off because it doesn't behave nicely enough with pdfs
+;; And I don't use my trackpad enough to justify it
+
+;; (use-package ultra-scroll
+;;   ;:load-path "~/code/emacs/ultra-scroll" ; if you git clone'd instead of package-vc-install
+;;   :init
+;;   (setq scroll-conservatively 101 ; important!
+;;         scroll-margin 0) 
+;;   :hook
+;;   (pdf-view-mode . (lambda () (ultra-scroll-mode 0)))
+;;   :config
+;;   (ultra-scroll-mode 1))

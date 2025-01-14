@@ -3,7 +3,7 @@
 # key: preamble
 # --
 \documentclass{article}
-\usepackage[left=3cm, right=3cm]{geometry}
+\usepackage[left=3cm, right=3cm, top=3cm, bottom=3cm]{geometry}
 \usepackage{graphicx} 
 \usepackage{amssymb}
 \usepackage{amsthm}
