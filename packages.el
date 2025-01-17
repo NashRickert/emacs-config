@@ -468,9 +468,11 @@
   (LaTeX-mode . aas-activate-for-major-mode)
   :config
   (aas-set-snippets 'LaTeX-mode
+    "sigma algebra" '(yas "$\\sigma$-algebra$0")
     ;; " \\[" '(yas "\\[ $0 \\]")
     :cond #'texmathp ; expand only in math mode
     ;; " \\{ " '(yas "\\{ $0 \\}")
+    "lim" '(yas "\\lim_{$1}$0")
     "frak" '(yas "\\mathfrak{$1}$0")
     "bb" '(yas "\\mathbb{$1}$0")
     "cal" '(yas "\\mathcal{$1}$0")
