@@ -119,7 +119,7 @@
   (evil-global-set-key 'motion "j" 'evil-next-visual-line)
   (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
 
-  ;; (setq evil-want-fine-undo t)
+  (setq evil-want-fine-undo t)
   (setq evil-leader/in-all-states t)
 
   (evil-set-leader 'normal (kbd "SPC"))
@@ -469,16 +469,24 @@
   :config
   (aas-set-snippets 'LaTeX-mode
     "sigma algebra" '(yas "$\\sigma$-algebra$0")
+    "sigma finite" '(yas "$\\sigma$-finite$0")
     ;; " \\[" '(yas "\\[ $0 \\]")
     :cond #'texmathp ; expand only in math mode
     ;; " \\{ " '(yas "\\{ $0 \\}")
+    ;; "in" '(yas "\\in$0")
+    "sub" '(yas "\\subset$0")
+    "m*" '(yas "\\mu^{*}$0")
+    "mu" '(yas "\\mu$0")
+    "lam" '(yas "\\lambda$0")
+    "inf" '(yas "\\infty$0")
     "lim" '(yas "\\lim_{$1}$0")
+    "to" '(yas "\\to$0")
     "frak" '(yas "\\mathfrak{$1}$0")
     "bb" '(yas "\\mathbb{$1}$0")
     "cal" '(yas "\\mathcal{$1}$0")
-    "int" '(yas "\\int_{$1}^{$2}$0")
+    ;; "int" '(yas "\\int_{$1}^{$2}$0")
+    "cupp" '(yas "\\bigcup_{$1}^{$2}$0")
     "sum" '(yas "\\sum_{$1}^{$2}$0")))
-
 
 ;; Vterm
 (use-package vterm)

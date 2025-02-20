@@ -54,7 +54,7 @@
 (add-to-list 'exec-path "/home/nash/.ghcup/bin/") 
 (setenv "PATH" (concat "/home/nash/.ghcup/bin:" (getenv "PATH")))
 
-
+(setopt dictionary-server "dict.org")
 
 
 (load "~/.emacs.d/packages.el")
