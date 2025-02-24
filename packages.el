@@ -242,7 +242,7 @@
 (use-package ace-window
   :bind ("M-o" . 'ace-window)
   :init
-  (setq aw-dispatch-always t)
+  ;; (setq aw-dispatch-always nil)
   (setq aw-minibuffer-flag t)
   (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)))
 
@@ -486,6 +486,7 @@
     "cal" '(yas "\\mathcal{$1}$0")
     ;; "int" '(yas "\\int_{$1}^{$2}$0")
     "cupp" '(yas "\\bigcup_{$1}^{$2}$0")
+    "capp" '(yas "\\bigcap_{$1}^{$2}$0")
     "sum" '(yas "\\sum_{$1}^{$2}$0")))
 
 ;; Vterm
