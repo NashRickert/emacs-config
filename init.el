@@ -66,10 +66,16 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(ultra-scroll vterm evil-surround smartparens aas eglot-booster sideline-flymake lsp-ui haskell-mode lsp-mode company yasnippet ace-window evil-magit magit projectile evil-collection evil gruvbox-theme helpful which-key doom-modeline marginalia vertico))
+   '(aas ace-window company docker doom-modeline eglot-booster evil
+	 evil-collection evil-magit evil-surround gruvbox-theme
+	 haskell-mode helpful lsp-mode lsp-ui magit marginalia
+	 projectile sideline-flymake smartparens ultra-scroll vertico
+	 vterm which-key yasnippet))
  '(package-vc-selected-packages
-   '((ultra-scroll :vc-backend Git :url "https://github.com/jdtsmith/ultra-scroll")
-     (eglot-booster :vc-backend Git :url "https://github.com/jdtsmith/eglot-booster"))))
+   '((ultra-scroll :vc-backend Git :url
+		   "https://github.com/jdtsmith/ultra-scroll")
+     (eglot-booster :vc-backend Git :url
+		    "https://github.com/jdtsmith/eglot-booster"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

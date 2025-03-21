@@ -233,7 +233,7 @@
 
 ;; Magit
 (use-package magit)
-  ;; This would make magit oben its buffer in the same window by default
+  ;; This would make magit open its buffer in the same window by default
   ;; :custom
   ;; (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
 
@@ -321,7 +321,8 @@
 (use-package eglot
 :init
 (setq eglot-autoshutdown t) ;; shutdown when no more relevant buffers exist
-(setq flymake-show-diagnostics-at-end-of-line t) ; Doesn't do anything :(
+; These are annoying but do give persistent diagnostics (other is only in normal mode on the same line)
+(setq flymake-show-diagnostics-at-end-of-line nil) 
 :hook ((python-mode . eglot-ensure)
 	(c-mode . eglot-ensure)
 	(java-mode . eglot-ensure)
@@ -475,8 +476,15 @@
     ;; " \\{ " '(yas "\\{ $0 \\}")
     ;; "in" '(yas "\\in$0")
     "sub" '(yas "\\subset$0")
-    "m*" '(yas "\\mu^{*}$0")
+    "m*" '(yas "\\mu^*$0")
+    "m+" '(yas "\\mu^+$0")
+    "m-" '(yas "\\mu^-$0")
+    ;; "n+" '(yas "\\nu^+$0")
+    ;; "n-" '(yas "\\nu^-$0")
     "mu" '(yas "\\mu$0")
+    "pi" '(yas "\\pi$0")
+    "nu" '(yas "\\nu$0")
+    "bot" '(yas "\\bot$0")
     "lam" '(yas "\\lambda$0")
     "inf" '(yas "\\infty$0")
     "lim" '(yas "\\lim_{$1}$0")
@@ -485,9 +493,13 @@
     "bb" '(yas "\\mathbb{$1}$0")
     "cal" '(yas "\\mathcal{$1}$0")
     ;; "int" '(yas "\\int_{$1}^{$2}$0")
+    "int" '(yas "\\int$0")
+    "chi" '(yas "\\chi$0")
     "cupp" '(yas "\\bigcup_{$1}^{$2}$0")
     "capp" '(yas "\\bigcap_{$1}^{$2}$0")
-    "sum" '(yas "\\sum_{$1}^{$2}$0")))
+    "prod" '(yas "\\prod_{$1}^{$2}$0")
+    "sum" '(yas "\\sum$0")))
+    ;; "sum" '(yas "\\sum_{$1}^{$2}$0")))
 
 ;; Vterm
 (use-package vterm)
@@ -507,3 +519,7 @@
 ;;   (pdf-view-mode . (lambda () (ultra-scroll-mode 0)))
 ;;   :config
 ;;   (ultra-scroll-mode 1))
+
+(use-package docker
+  :ensure t
+  :bind ("C-c d" . docker))
